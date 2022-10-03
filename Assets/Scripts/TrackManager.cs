@@ -51,7 +51,6 @@ public class TrackManager : MonoBehaviour
     private float MaxXAux = 6f;
     private float MinXAux = 4.3f;
 
-
     public float MaxXMinRandom = 5.5f;
     public float MinXMaxRandom = 4.75f;
 
@@ -64,8 +63,11 @@ public class TrackManager : MonoBehaviour
 
     private float MovingTrackAcceleration = 0;
 
+    private float LastActivation;
+
     public void ToggleNightMode()
     {
+        LastActivation = Player.Score;
         StartCoroutine(IToggleNightMode());
     }
 
@@ -86,6 +88,8 @@ public class TrackManager : MonoBehaviour
         BridgeWarning.SetActive(true);
         yield return new WaitForSeconds(0.1f);
         BridgeWarning.SetActive(false);
+
+        CurrentTrack = TrackType.Bridge;
     }
 
     public IEnumerator IToggleNightMode()
@@ -111,9 +115,11 @@ public class TrackManager : MonoBehaviour
 
     public void ChangeLevel(TrackType Type)
     {
+        LastActivation = Player.Score;
         if (Type == TrackType.Bridge)
         {
             StartCoroutine(WarningBridge());
+            return;
         }
         CurrentTrack = Type;
     }
@@ -136,8 +142,17 @@ public class TrackManager : MonoBehaviour
         GoOutPath = Random.Range(0, 2) == 1;
     }
 
+   
+
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            BomberosOut = true;
+            Bomberos.transform.position = SpawnPointBomberos.transform.position;
+            Bomberos.gameObject.SetActive(true);
+        }
+
         if (Player.Speed > 0)
         {
             if (GoOutPath)
@@ -216,16 +231,11 @@ public class TrackManager : MonoBehaviour
 
         if (Bomberos.gameObject.activeSelf)
         {
-            if (Vector2.Distance(Bomberos.transform.position, SpawnPointBomberos.transform.position) >= 40f)
+            if (Vector2.Distance(Bomberos.transform.position, SpawnPointBomberos.transform.position) >= 19f)
             {
                 BomberosOut = false;
                 Bomberos.gameObject.SetActive(false);
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            ChangeLevel(TrackType.Bridge);
         }
 
         if (Player.Score >= 600 && CurrentTrack != TrackType.Ice && Player.Score <= 700)
@@ -238,49 +248,51 @@ public class TrackManager : MonoBehaviour
         }
         else if (Player.Score >= 1000 && CurrentTrack == TrackType.Normal && Player.Score <= 1050 && !BomberosOut)
         {
+            LastActivation = Player.Score;
             BomberosOut = true;
             Bomberos.gameObject.SetActive(true);
             Bomberos.transform.position = SpawnPointBomberos.transform.position;
         }
-        else if (Player.Score >= 1500 && Player.Score <= 1600 && NightMode == false)
+        else if (Player.Score >= 1500 && LastActivation < 1500 && NightMode == false)
         {
             ToggleNightMode();
         }
-        else if (Player.Score >= 2000 && Player.Score <= 2100 && NightMode == true)
+        else if (Player.Score >= 1750 && LastActivation < 1750 && NightMode == true)
         {
             ToggleNightMode();
         }
-        else if (Player.Score >= 2500 && Player.Score <= 2600 && CurrentTrack != TrackType.Bridge)
+        else if (Player.Score >= 2500 && LastActivation < 2500)
         {
             ChangeLevel(TrackType.Bridge);
         }
-        else if (Player.Score >= 3000 && Player.Score <= 3100 && CurrentTrack != TrackType.Normal)
+        else if (Player.Score >= 3000 && LastActivation < 3000 && CurrentTrack != TrackType.Normal)
         {
 
             ChangeLevel(TrackType.Normal);
         }
-        else if (Player.Score >= 3100 && Player.Score <= 3150 && CurrentTrack == TrackType.Normal && !BomberosOut)
+        else if (Player.Score >= 3100 && LastActivation < 3100 && CurrentTrack == TrackType.Normal && !BomberosOut)
         {
+            LastActivation = Player.Score;
             BomberosOut = true;
             Bomberos.transform.position = SpawnPointBomberos.transform.position;
             Bomberos.gameObject.SetActive(true);
         }
-        else if (Player.Score >= 3400 && Player.Score <= 3500 && CurrentTrack != TrackType.Ice)
+        else if (Player.Score >= 3400 && LastActivation < 3500 && CurrentTrack != TrackType.Ice)
         {
             ToggleNightMode();
             ChangeLevel(TrackType.Ice);
         }
-        else if (Player.Score >= 4000 && Player.Score <= 4100 && CurrentTrack != TrackType.Normal)
+        else if (Player.Score >= 3750 && LastActivation < 3750 && CurrentTrack != TrackType.Normal)
         {
             ToggleNightMode();
             ChangeLevel(TrackType.Normal);
         }
-        else if (Player.Score >= 4500 && Player.Score <= 4600 && CurrentTrack != TrackType.Bridge)
+        else if (Player.Score >= 4500 && LastActivation < 4500 && CurrentTrack != TrackType.Bridge)
         {
             ToggleNightMode();
             ChangeLevel(TrackType.Bridge);
         }
-        else if (Player.Score >= 5000 && Player.Score <= 5100 && CurrentTrack != TrackType.Normal)
+        else if (Player.Score >= 5000 && LastActivation < 5000 && CurrentTrack != TrackType.Normal)
         {
             ToggleNightMode();
             ChangeLevel(TrackType.Normal);

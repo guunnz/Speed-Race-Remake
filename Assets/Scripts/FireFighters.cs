@@ -28,7 +28,6 @@ public class FireFighters : MonoBehaviour
     private void FixedUpdate()
     {
         transform.position = new Vector2(this.transform.position.x, this.transform.position.y + Speed);
-
     }
 
 

@@ -55,6 +55,12 @@ public class CarMainBehaviour : MonoBehaviour
 
     private int HorsePowers = 15;
 
+    public AudioSource AS;
+
+    public AudioSource iceLoop;
+
+    private bool Finished;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -113,6 +119,7 @@ public class CarMainBehaviour : MonoBehaviour
             {
                 Acceleration = 0;
             }
+
 
             Moving = Acceleration > 0;
 
@@ -176,6 +183,7 @@ public class CarMainBehaviour : MonoBehaviour
             if (Invincible)
                 return;
 
+            AudioManager.DO.Play("Crash");
             Debug.Log("Dead");
             dead = true;
             StartCoroutine(DeadCoroutine());
@@ -183,12 +191,14 @@ public class CarMainBehaviour : MonoBehaviour
 
         if (collision.CompareTag("Ice"))
         {
+            iceLoop.Play();
             IceMode = true;
         }
 
 
         if (collision.CompareTag("Normal"))
         {
+            iceLoop.Stop();
             IceMode = false;
         }
     }
@@ -310,14 +320,15 @@ public class CarMainBehaviour : MonoBehaviour
                 TimeGame = ExtraTime;
                 ExtraTimeActivated = false;
             }
-            else
+            else if (!Finished)
             {
+                Finished = true;
                 // Play Music
-
+                AudioManager.DO.Play("Gameover");
                 MaxSpeed = 0;
                 Speed = 0;
                 TimeGame = 0;
-                Invoke("ReloadScene", 1f);
+                Invoke("ReloadScene", 4f);
             }
         }
 
@@ -338,6 +349,7 @@ public class CarMainBehaviour : MonoBehaviour
 
     IEnumerator ExtendedTimeAnim()
     {
+        AudioManager.DO.Play("ExtendedTime");
         for (int i = 0; i < 6; i++)
         {
             ExtraTimeObject.SetActive(true);
@@ -355,6 +367,8 @@ public class CarMainBehaviour : MonoBehaviour
     void Update()
     {
         TimeManage();
+        AS.pitch = Speed / MaxSpeed;
+        iceLoop.volume = Speed / MaxSpeed;
         if (dead || TimeGame <= 0)
             return;
 
