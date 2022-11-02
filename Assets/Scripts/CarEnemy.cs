@@ -25,6 +25,10 @@ public class CarEnemy : MonoBehaviour
         {
             moveTo *= -1;
         }
+        else if (collision.CompareTag("WallInside"))
+        {
+            this.transform.position = new Vector3(Random.Range(0, 2) == 0 ? -1.2f : 1.2f, this.transform.position.y, this.transform.position.z);
+        }
     }
 
     public void Respawn()

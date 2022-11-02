@@ -59,6 +59,8 @@ public class CarMainBehaviour : MonoBehaviour
 
     public AudioSource iceLoop;
 
+    public GameObject Tutorial;
+
     private bool Finished;
 
     private void Awake()
@@ -264,7 +266,16 @@ public class CarMainBehaviour : MonoBehaviour
     {
         if (Score != 0)
         {
-            TimeGame -= Time.deltaTime;
+            if (TimeGame <= 0)
+            {
+                TimeGame = 0;
+            }
+            else
+            {
+                TimeGame -= Time.deltaTime;
+            }
+
+            Tutorial.SetActive(false);
         }
 
         TimerText.text = "<mspace=mspace=18>" + (TimeGame <= 9 ? "0" : "") + TimeGame.ToString("N0") + "</mspace>";

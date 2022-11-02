@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - Ice
   - Normal
+  - WallInside
   layers:
   - Default
   - TransparentFX

@@ -160,7 +160,7 @@ public class TrackManager : MonoBehaviour
                 if (XValuePathAux <= MaxXValue)
                 {
 
-                    XValuePathAux += (Time.deltaTime / Random.Range(5, 7) * Player.Acceleration) * MovingTrackAcceleration;
+                    XValuePathAux += (Time.deltaTime / Random.Range(8,12) * Player.Acceleration) * MovingTrackAcceleration;
 
                     if (Mathf.Abs(XValuePathAux - MaxXValue) < 0.1f)
                     {
@@ -191,7 +191,7 @@ public class TrackManager : MonoBehaviour
             {
                 if (XValuePathAux >= MinXValue)
                 {
-                    XValuePathAux -= (Time.deltaTime / Random.Range(5, 7) * Player.Acceleration) * MovingTrackAcceleration;
+                    XValuePathAux -= (Time.deltaTime / Random.Range(8, 12) * Player.Acceleration) * MovingTrackAcceleration;
                     if (Mathf.Abs(XValuePathAux - MinXValue) < 0.1f)
                     {
                         MovingTrackAcceleration -= Time.deltaTime;

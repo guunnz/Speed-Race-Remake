@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public GameObject EnemyCar;
     public Transform SpawnPoint;
 
+    public TrackManager TrackManager;
     public GameObject Bomberos;
 
     private List<CarEnemy> carEnemyList = new List<CarEnemy>();
@@ -23,7 +24,9 @@ public class GameManager : MonoBehaviour
         {
             if (carEnemyList.Count < 16)
             {
-                GameObject carEnemy = Instantiate(EnemyCar, new Vector2(Random.Range(-2f, Bomberos.activeSelf ? 1.5f : 4.6f), SpawnPoint.position.y), Quaternion.identity, null);
+
+                float randomPos = TrackManager.CurrentTrack == TrackType.Bridge ? (Random.Range(0, 2) == 0 ? Random.Range(-3f, -1.5f) : Random.Range(3, 1.5f)) : Random.Range(-3f, Bomberos.activeSelf ? 1.5f : 3f);
+                GameObject carEnemy = Instantiate(EnemyCar, new Vector2(randomPos, SpawnPoint.position.y), Quaternion.identity, null);
 
                 carEnemyList.Insert(0, carEnemy.GetComponent<CarEnemy>());
             }
@@ -32,8 +35,9 @@ public class GameManager : MonoBehaviour
                 CarEnemy carEnemy = carEnemyList.Last();
 
                 carEnemyList.RemoveAt(carEnemyList.Count - 1);
+                float randomPos = TrackManager.CurrentTrack == TrackType.Bridge ? (Random.Range(0, 2) == 0 ? Random.Range(-3f, -1.5f) : Random.Range(3, 1.5f)) : Random.Range(-3f, Bomberos.activeSelf ? 1.5f : 3f);
 
-                carEnemy.transform.position = new Vector2(Random.Range(-3f, 3f), NextSpawn);
+                carEnemy.transform.position = new Vector2(randomPos, NextSpawn);
 
                 carEnemy.Respawn();
 
